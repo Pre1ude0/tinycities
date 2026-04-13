@@ -13,7 +13,7 @@ from core.security import (
 	verify_password,
 )
 from schemas.auth import LoginRequest, RegisterRequest
-from utils.access_keys import load_access_keys, write_access_keys
+from utils.access_keys import write_access_keys, load_access_keys
 from utils.users import create_user, username_exists
 
 router = APIRouter(tags=["auth"])
@@ -40,10 +40,9 @@ def login(login_request: LoginRequest, response: Response):
 
 @router.post("/register")
 def register(req: RegisterRequest, response: Response):
-    keys = load_access_keys(secrets.ACCESS_KEYS_FILE)
+    keys = load_access_keys(secrets.KEYS_PATH)
 
-    if not keys:
-        raise HTTPException(status_code=400, detail="No access keys available")
+
     if req.access_key not in keys:
         raise HTTPException(status_code=403, detail="Invalid access key")
 
@@ -58,17 +57,11 @@ def register(req: RegisterRequest, response: Response):
     finally:
         conn.close()
 
-    keys.discard(req.access_key)
-    write_access_keys(keys, secrets.ACCESS_KEYS_FILE)
+    keys.remove(req.access_key)
+    write_access_keys(keys, secrets.KEYS_PATH)
 
     payload = {"username": req.username, "role": 1, "id": id}
     token = create_access_token(payload)
     clear_access_cookie(response)
     set_access_cookie(response, token)
     return {"detail": "User registered successfully"}
-
-
-@router.post("/logout")
-def logout(response: Response):
-    clear_access_cookie(response)
-    return {"detail": "Logged out"}

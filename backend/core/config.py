@@ -13,12 +13,11 @@ load_dotenv()
 @dataclass(frozen=True)
 class Secrets:
     DB_PATH: str
-    KEYS_PATH: str
     SECRET_KEY: str
     ALGORITHM: str
     EXPIRATION_DURATION: timedelta
     ACCESS_KEY_LENGTH: int
-    ACCESS_KEYS_FILE: str
+    KEYS_PATH: str
     COOKIE_SECURE: bool
     COOKIE_SAMESITE: Literal["lax", "strict", "none"]
     ADMIN_USERNAME: str | None
@@ -52,7 +51,6 @@ secrets = Secrets(
     ALGORITHM=ALGORITHM,
     EXPIRATION_DURATION=EXPIRATION_DURATION,
     ACCESS_KEY_LENGTH=ACCESS_KEY_LENGTH,
-    ACCESS_KEYS_FILE=ACCESS_KEYS_FILE,
     COOKIE_SECURE=COOKIE_SECURE,
     COOKIE_SAMESITE=COOKIE_SAMESITE,
     ADMIN_USERNAME=ADMIN_USERNAME,
