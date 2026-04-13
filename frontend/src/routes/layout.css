@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+
+input,
+button {
+	@apply rounded-sm border-2 border-gray-400 bg-gray-100 px-1;
+}
