@@ -82,6 +82,8 @@
 				type="password"
 				bind:value={confirmPassword}
 				placeholder="confirm password"
+				disabled={!password}
+				class="disabled:opacity-60"
 				required
 			/>
 			<input type="text" placeholder="invite key" bind:value={inviteKey} required />

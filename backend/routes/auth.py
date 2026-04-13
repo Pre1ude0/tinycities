@@ -15,6 +15,7 @@ from core.security import (
 from schemas.auth import LoginRequest, RegisterRequest
 from utils.access_keys import write_access_keys, load_access_keys
 from utils.users import create_user, username_exists
+import re
 
 router = APIRouter(tags=["auth"])
 
@@ -42,7 +43,6 @@ def login(login_request: LoginRequest, response: Response):
 def register(req: RegisterRequest, response: Response):
     keys = load_access_keys(secrets.KEYS_PATH)
 
-
     if req.access_key not in keys:
         raise HTTPException(status_code=403, detail="Invalid access key")
 
@@ -50,6 +50,12 @@ def register(req: RegisterRequest, response: Response):
     try:
         if username_exists(conn, req.username):
             raise HTTPException(status_code=400, detail="Username already exists")
+
+        if not re.fullmatch(r"[a-z0-9_]+", req.username):
+            raise HTTPException(
+                status_code=400,
+                detail="Username must contain only lowercase letters, numbers, and underscores",
+            )
 
         password_hash = hash_password(req.password)
         id = create_user(conn, req.username, password_hash, role=1)

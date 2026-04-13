@@ -5,6 +5,14 @@ button {
 	@apply rounded-sm border-2 border-gray-400 bg-gray-100 px-1;
 }
 
+button {
+	@apply cursor-pointer;
+}
+
+input {
+	@apply cursor-text;
+}
+
 a {
 	@apply text-blue-500 hover:underline;
 }

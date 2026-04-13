@@ -3,9 +3,10 @@ from __future__ import annotations
 import sqlite3
 from dataclasses import dataclass
 from typing import Optional
+from core.config import secrets
 
 
-@dataclass(frozen=True)
+@dataclass()
 class UserRecord:
     id: int
     username: str
@@ -47,3 +48,10 @@ def parse_payload(payload: dict) -> Optional[UserRecord]:
         )
     except (ValueError, TypeError):
         return None
+
+def update_user(conn: sqlite3.Connection, user_id: int, **kwargs) -> bool:
+    cur = conn.cursor()
+    set_clause = ", ".join(f"{key} = ?" for key in kwargs)
+    values = list(kwargs.values()) + [user_id]
+    cur.execute(f"UPDATE users SET {set_clause} WHERE id = ?", values)
+    return cur.rowcount > 0

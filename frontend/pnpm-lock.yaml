@@ -12,7 +12,7 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1(@sveltejs/kit@2.57.1(@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.55.3)(vite@8.0.8(@types/node@25.6.0)(jiti@2.6.1)))(svelte@5.55.3)(typescript@6.0.2)(vite@8.0.8(@types/node@25.6.0)(jiti@2.6.1)))
       '@sveltejs/kit':
-        specifier: ^2.57.0
+        specifier: ^2.57.1
         version: 2.57.1(@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.55.3)(vite@8.0.8(@types/node@25.6.0)(jiti@2.6.1)))(svelte@5.55.3)(typescript@6.0.2)(vite@8.0.8(@types/node@25.6.0)(jiti@2.6.1))
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
@@ -24,7 +24,7 @@ importers:
         specifier: ^25.6.0
         version: 25.6.0
       prettier:
-        specifier: ^3.8.1
+        specifier: ^3.8.2
         version: 3.8.2
       prettier-plugin-svelte:
         specifier: ^3.5.1
@@ -33,7 +33,7 @@ importers:
         specifier: ^0.7.2
         version: 0.7.2(prettier-plugin-svelte@3.5.1(prettier@3.8.2)(svelte@5.55.3))(prettier@3.8.2)
       svelte:
-        specifier: ^5.55.2
+        specifier: ^5.55.3
         version: 5.55.3
       svelte-check:
         specifier: ^4.4.6
@@ -45,7 +45,7 @@ importers:
         specifier: ^6.0.2
         version: 6.0.2
       vite:
-        specifier: ^8.0.7
+        specifier: ^8.0.8
         version: 8.0.8(@types/node@25.6.0)(jiti@2.6.1)
 
 packages:
