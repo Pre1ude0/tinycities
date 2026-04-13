@@ -7,6 +7,4 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
-<p class="p-3"><span class="line-through">tinkletopia</span> homophobia.com</p>
-
 {@render children()}

@@ -1,5 +1,8 @@
 <script lang="ts">
-	let mode = $state<'login' | 'register'>('login');
+	import type { PageData } from './$types';
+	let { data } = $props<{ data: PageData }>();
+	let slug = $derived(data.slug);
+
 	let username = $state('');
 	let password = $state('');
 	let confirmPassword = $state('');
@@ -10,7 +13,7 @@
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
 
-		if (mode === 'register' && password !== confirmPassword) {
+		if (slug === 'register' && password !== confirmPassword) {
 			traceback = 'Passwords do not match.';
 			tracebackState = 'err';
 			return;
@@ -21,11 +24,11 @@
 
 		try {
 			const body =
-				mode === 'register'
+				slug === 'register'
 					? { username, password, access_key: inviteKey }
 					: { username, password };
 
-			const res = await fetch(`/api/${mode}`, {
+			const res = await fetch(`/api/${slug}`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json', accept: 'application/json' },
 				credentials: 'include',
@@ -49,7 +52,7 @@
 
 			traceback = 'Success! Redirecting...';
 			tracebackState = 'success';
-			window.location.href = '/whoami';
+			window.location.href = '/dash';
 		} catch (err) {
 			traceback = err instanceof Error ? err.message : 'An error occurred.';
 			tracebackState = 'err';
@@ -58,20 +61,7 @@
 </script>
 
 <center class="pt-40">
-	<button
-		class="cursor-pointer hover:underline"
-		onclick={() => (mode = 'register')}
-		style:font-weight={mode === 'register' ? 'bold' : 'normal'}
-	>
-		Register
-	</button>
-	|
-	<button
-		class="cursor-pointer hover:underline"
-		onclick={() => (mode = 'login')}
-		style:font-weight={mode === 'login' ? 'bold' : 'normal'}>Login</button
-	>
-
+	<h1 class="text-2xl font-semibold capitalize">{slug}</h1>
 	<form onsubmit={handleSubmit} class="mt-4 flex flex-col items-center gap-1">
 		<input
 			id="username"
@@ -86,7 +76,7 @@
 		/>
 		<input id="password" type="password" bind:value={password} placeholder="password" required />
 
-		{#if mode === 'register'}
+		{#if slug === 'register'}
 			<input
 				id="confirm"
 				type="password"
@@ -99,10 +89,8 @@
 
 		<button
 			type="submit"
-			class="mt-3 cursor-pointer rounded border-2 border-gray-400 bg-gray-100 px-2"
-			>{mode === 'login'
-				? 'Buy more land on the metaverse'
-				: 'Start earning money with atlas earth'}</button
+			class="mt-3 cursor-pointer rounded border-2 border-gray-400 bg-gray-100 px-2 capitalize"
+			>{slug}</button
 		>
 	</form>
 
@@ -111,12 +99,16 @@
 	>
 		{traceback}
 	</div>
+
+	<div class="mt-10 text-sm text-gray-500">
+		{#if slug === 'login'}
+			<span>
+				Don't have an account? <a href="/register" class="hover:underline">Register</a>
+			</span>
+		{:else}
+			<span>
+				Already have an account? <a href="/login" class="hover:underline">Login</a>
+			</span>
+		{/if}
+	</div>
 </center>
-
-<style>
-	@import 'tailwindcss';
-
-	input {
-		@apply rounded-sm border-2 border-gray-400 bg-gray-100 px-1;
-	}
-</style>
