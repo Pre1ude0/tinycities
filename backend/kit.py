@@ -149,11 +149,11 @@ def cmd_create_user(db_path: str, username: str, password: Optional[str], role: 
 
 
 def build_parser() -> argparse.ArgumentParser:
-	p = argparse.ArgumentParser(prog="kit", description="Local admin kit for tinkletopiacom backend")
+	p = argparse.ArgumentParser(prog="kit", description="Local admin kit for tinycities backend")
 	p.add_argument(
 		"--db",
 		default=None,
-		help="Path to sqlite DB. If omitted, uses core.config.secrets.DB_PATH",
+		help="Path to sqlite DB. If omitted, uses core.secrets.secrets.DB_PATH",
 	)
 
 	sub = p.add_subparsers(dest="cmd", required=True)
@@ -185,7 +185,7 @@ def resolve_db_path(cli_db: Optional[str]) -> str:
 	if cli_db:
 		return cli_db
 	try:
-		from core.config import secrets
+		from core.secrets import secrets
 
 		return secrets.DB_PATH
 	except Exception:

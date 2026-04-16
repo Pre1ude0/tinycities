@@ -3,10 +3,13 @@
 	import type { User } from '$lib/types';
 	import AccessKeys from './AccessKeys.svelte';
 	import { page } from '$app/state';
+	import Pages from './Pages.svelte';
+	import FileManager from './FileManager.svelte';
 	import UserMod from './UserMod.svelte';
 	import X from '$lib/assets/X.svelte';
 
 	let usrMod = $derived<boolean>(page.url.hash === '#usrmod');
+	let editPageId = $derived<string | null>(page.url.searchParams.get('edit'));
 	let user = $state<User | null>(null);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
@@ -53,6 +56,18 @@
 		{#if user && user.role >= 2}
 			Access keys
 			<AccessKeys />
+		{/if}
+	</div>
+
+	<div class="flex w-full flex-row gap-5">
+		<div class="p-8">
+			<Pages />
+		</div>
+
+		{#if editPageId}
+			<div class="flex-1 p-8">
+				<FileManager />
+			</div>
 		{/if}
 	</div>
 </div>

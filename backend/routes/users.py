@@ -4,7 +4,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Cookie, HTTPException
 
 from schemas.auth import ModifyUserRequest
-from core.config import secrets
+from core.secrets import secrets
 from core.security import get_payload
 from utils.users import parse_payload, update_user
 from core.security import hash_password

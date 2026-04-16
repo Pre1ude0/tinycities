@@ -15,7 +15,7 @@ To recreate this project with the same configuration:
 
 ```sh
 # recreate this project
-pnpm dlx sv@0.15.1 create --template minimal --types ts --add prettier tailwindcss="plugins:none" --install pnpm tinkletopiacom
+pnpm dlx sv@0.15.1 create --template minimal --types ts --add prettier tailwindcss="plugins:none" --install pnpm tinycities
 ```
 
 ## Developing

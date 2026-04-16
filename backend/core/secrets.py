@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 @dataclass(frozen=True)
 class Secrets:
     DB_PATH: str
@@ -22,6 +21,8 @@ class Secrets:
     COOKIE_SAMESITE: Literal["lax", "strict", "none"]
     ADMIN_USERNAME: str | None
     ADMIN_TOKEN: str | None
+    USER_PAGE_LIMIT: int = 10
+    PAGE_SRV_PATH: str = "../srv/"
 
 
 DB_PATH: str = os.getenv("DB_PATH", "users.db")
@@ -44,6 +45,9 @@ COOKIE_SAMESITE: Literal["lax", "strict", "none"] = cast(Literal["lax", "strict"
 ADMIN_USERNAME: str | None = os.getenv("ADMIN_USERNAME") or None
 ADMIN_TOKEN: str | None = os.getenv("ADMIN_TOKEN") or None
 
+USER_PAGE_LIMIT: int = int(os.getenv("USER_PAGE_LIMIT", "10"))
+PAGE_SRV_PATH: str = os.getenv("PAGE_SRV_PATH", "../srv/")
+
 secrets = Secrets(
     DB_PATH=DB_PATH,
     KEYS_PATH=KEYS_PATH,
@@ -55,4 +59,6 @@ secrets = Secrets(
     COOKIE_SAMESITE=COOKIE_SAMESITE,
     ADMIN_USERNAME=ADMIN_USERNAME,
     ADMIN_TOKEN=ADMIN_TOKEN,
+    USER_PAGE_LIMIT=USER_PAGE_LIMIT,
+    PAGE_SRV_PATH=PAGE_SRV_PATH,
 )

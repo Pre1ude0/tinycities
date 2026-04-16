@@ -1,5 +1,5 @@
 {
-	"name": "tinkletopiacom",
+	"name": "tinycities",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
@@ -27,5 +27,8 @@
 		"tailwindcss": "^4.2.2",
 		"typescript": "^6.0.2",
 		"vite": "^8.0.8"
+	},
+	"dependencies": {
+		"@svar-ui/svelte-filemanager": "^2.5.0"
 	}
 }

@@ -4,7 +4,7 @@ import sqlite3
 
 from fastapi import APIRouter, HTTPException, Response
 
-from core.config import secrets
+from core.secrets import secrets
 from core.security import (
 	clear_access_cookie,
 	create_access_token,

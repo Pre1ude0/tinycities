@@ -35,7 +35,7 @@
 					error = response.detail || `Request failed (${res.status})`;
 					throw new Error(response.detail || `Request failed (${res.status})`);
 				} else {
-					window.location.href = '/login';
+					window.location.href = '/logout';
 				}
 			})
 			.catch((e) => {

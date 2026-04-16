@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-import sqlite3
 
 from fastapi import APIRouter, Cookie, HTTPException
 
 from utils.users import parse_payload
-from core.config import secrets
+from core.secrets import secrets
 from core.security import get_payload
 from utils.access_keys import generate_access_key, write_access_keys
 
