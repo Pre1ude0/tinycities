@@ -1,18 +1,21 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { User } from '$lib/types';
+	import type { User, Page } from '$lib/types';
 	import AccessKeys from './AccessKeys.svelte';
 	import { page } from '$app/state';
 	import Pages from './Pages.svelte';
 	import FileManager from './FileManager.svelte';
 	import UserMod from './UserMod.svelte';
 	import X from '$lib/assets/X.svelte';
+	import NewPage from './NewPage.svelte';
 
 	let usrMod = $derived<boolean>(page.url.hash === '#usrmod');
 	let editPageId = $derived<string | null>(page.url.searchParams.get('edit'));
 	let user = $state<User | null>(null);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
+
+	let pages = $state<Page[] | null>(null);
 
 	async function loadWhoAmI() {
 		loading = true;
@@ -40,6 +43,29 @@
 
 	onMount(async () => {
 		await loadWhoAmI();
+
+		fetch('/api/pages', {
+			method: 'GET',
+			headers: { accept: 'application/json' },
+			credentials: 'include'
+		})
+			.then(async (res) => {
+				if (!res.ok) {
+					const text = await res.text();
+					throw new Error(text || `Request failed (${res.status})`);
+				}
+
+				const data = await res.json();
+				if (!Array.isArray(data.pages)) {
+					throw new Error('Invalid response format');
+				}
+
+				pages = data.pages as Page[];
+				pages = pages.sort((a, b) => (b.role ?? -Infinity) - (a.role ?? -Infinity));
+			})
+			.catch((e) => {
+				console.error(e instanceof Error ? e.message : String(e));
+			});
 	});
 </script>
 
@@ -60,8 +86,9 @@
 	</div>
 
 	<div class="flex w-full flex-row gap-5">
-		<div class="p-8">
-			<Pages />
+		<div class="flex flex-col gap-5 p-8">
+			<NewPage bind:pages />
+			<Pages {pages} />
 		</div>
 
 		{#if editPageId}

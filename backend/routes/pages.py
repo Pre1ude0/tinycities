@@ -57,9 +57,21 @@ def create_page(
     try:
         page_id, access_id = enlist_page(conn, page_request.page_name, page_request.is_private, page_request.external_url, user.id)
         conn.commit()
+
         if page_request.page_name is not None:
             mkdir_page(page_request.page_name)
-        return {"detail": "Page created successfully", "page_id": page_id, "access_id": access_id}
+
+        return {
+            "detail": "Page created successfully",
+            "page": {
+                "id": page_id,
+                "name": page_request.page_name,
+                "is_private": page_request.is_private,
+                "external_url": page_request.external_url
+            },
+            "access_id": access_id
+        }
+
     except sqlite3.IntegrityError:
         raise HTTPException(status_code=400, detail="Page name already exists")
     except Exception as e:

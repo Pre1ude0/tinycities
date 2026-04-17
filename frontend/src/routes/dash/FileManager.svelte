@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import { Filemanager, Willow } from '@svar-ui/svelte-filemanager';
 	import type { IApi, IEntity, IFile, TID } from '@svar-ui/svelte-filemanager';
+	import type { Page } from '$lib/types';
 
 	type FMItemType = 'file' | 'folder';
 
@@ -36,6 +37,8 @@
 	let error = $state<string | null>(null);
 	let drive = $state<DriveInfo>({});
 	let fmApi = $state<IApi | null>(null);
+	let hasExternalUrl = $state<boolean | null>(null);
+	let pageDisplayName = $state<string | null>(null);
 
 	$effect(() => {
 		const id = editId;
@@ -43,9 +46,11 @@
 			items = [];
 			cwd = '/';
 			error = null;
+			hasExternalUrl = null;
+			pageDisplayName = null;
 			return;
 		}
-		void loadDir(id, '/');
+		void refreshForPage(id);
 	});
 
 	function parseDate(s?: string): Date | undefined {
@@ -94,6 +99,46 @@
 		const url = `/api/pages/${id}/files?path=${encodeURIComponent(normalizePath(path))}`;
 		const data = await api<ListResponse>(url, { method: 'GET' });
 		return toEntities(data.items);
+	}
+
+	async function refreshForPage(id: number) {
+		loading = true;
+		error = null;
+		hasExternalUrl = null;
+		pageDisplayName = null;
+
+		try {
+			const data = await api<{ pages: Page[] }>('/api/pages', {
+				method: 'GET'
+			});
+
+			const target = data.pages.find((p) => p.id === id) || null;
+			pageDisplayName = target?.name || target?.external_url || null;
+
+			if (!target) {
+				error = 'Page not found';
+				items = [];
+				cwd = '/';
+				hasExternalUrl = null;
+				return;
+			}
+
+			if (target.external_url) {
+				items = [];
+				cwd = '/';
+				hasExternalUrl = true;
+				return;
+			}
+
+			hasExternalUrl = false;
+			await loadDir(id, '/');
+		} catch (e) {
+			error = e instanceof Error ? e.message : String(e);
+			items = [];
+			cwd = '/';
+		} finally {
+			loading = false;
+		}
 	}
 
 	async function loadDir(id: number, path: string) {
@@ -280,18 +325,22 @@
 		<p>Loading...</p>
 	{/if}
 
-	<Willow>
-		<Filemanager
-			data={items}
-			{drive}
-			{init}
-			onrequestdata={handleRequestData}
-			oncreatefile={handleCreateFile}
-			onrenamefile={handleRenameFile}
-			ondeletefiles={handleDeleteFiles}
-			onmovefiles={handleMoveFiles}
-			oncopyfiles={handleCopyFiles}
-			ondownloadfile={handleDownloadFile}
-		/>
-	</Willow>
+	{#if hasExternalUrl}
+		<p>This page points to an external URL and doesn’t have a file directory.</p>
+	{:else}
+		<Willow>
+			<Filemanager
+				data={items}
+				{drive}
+				{init}
+				onrequestdata={handleRequestData}
+				oncreatefile={handleCreateFile}
+				onrenamefile={handleRenameFile}
+				ondeletefiles={handleDeleteFiles}
+				onmovefiles={handleMoveFiles}
+				oncopyfiles={handleCopyFiles}
+				ondownloadfile={handleDownloadFile}
+			/>
+		</Willow>
+	{/if}
 {/if}
