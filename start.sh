@@ -38,8 +38,8 @@ shutdown() {
 trap shutdown SIGTERM SIGINT
 
 # Start backend
-cd $SCRIPT_DIR/backend
 source venv/bin/activate
+cd $SCRIPT_DIR/backend
 uvicorn main:app --host 0.0.0.0 --port $BACKEND_PORT &
 UVICORN_PID=$!
 
